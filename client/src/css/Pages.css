@@ -1,0 +1,112 @@
+/* client/src/css/Pages.css
+   Shared page layout plus the image-card grid on the front page. */
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.page-title {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 2.25rem;
+}
+
+.page-subtitle {
+  margin: 0 0 2rem;
+  color: #666;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #5b3df5;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* Loading / error / empty messages */
+.status-message {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: #666;
+}
+
+.status-message.error {
+  color: #b00020;
+}
+
+/* ---------- Location image cards ---------- */
+
+/* Responsive grid: as many 280px+ columns as fit, cards grow to fill the row. */
+.location-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.location-card {
+  position: relative;
+  display: block;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 14px;
+  color: #fff;
+  text-decoration: none;
+  /* Shown only if the image fails to load. */
+  background: linear-gradient(135deg, #5b3df5, #f5683d);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.location-card:hover,
+.location-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* Image fills the card and is cropped (not stretched) to fit. */
+.location-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.location-card:hover img {
+  transform: scale(1.06);
+}
+
+/* Dark gradient at the bottom keeps the white text readable on any photo. */
+.location-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0) 65%);
+}
+
+.location-card-overlay h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+}
+
+.location-card-overlay p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Stack of event cards on the location page */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}

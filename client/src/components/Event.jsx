@@ -1,62 +1,70 @@
-import React, { useState, useEffect } from 'react'
+// client/src/components/Event.jsx
+// -----------------------------------------------------------------------------
+// A single event card. Reused anywhere events are listed (the location detail
+// page now, and the stretch "all events" page later).
+//
+// Props: `event` is one row from the API:
+//   { id, title, location_id, location_name, venue, event_date,
+//     description, image, ticket_url }
+// -----------------------------------------------------------------------------
+
 import '../css/Event.css'
 
-const Event = (props) => {
+// Turns the ISO timestamp from the API into something readable,
+// e.g. "Saturday, November 14, 2026 at 12:00 PM".
+const formatDate = (isoString) =>
+  new Date(isoString).toLocaleString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
 
-    const [event, setEvent] = useState([])
-    const [time, setTime] = useState([])
-    const [remaining, setRemaining] = useState([])
+const Event = ({ event }) => {
+  return (
+    <article className="event-card">
+      {/* Image on the left. If the file is missing, hide it and let the
+          gradient background on .event-image show instead. */}
+      <div className="event-image">
+        {event.image && (
+          <img
+            src={event.image}
+            alt={event.title}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none'
+            }}
+          />
+        )}
+      </div>
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const eventData = await EventsAPI.getEventsById(props.id)
-                setEvent(eventData)
-            }
-            catch (error) {
-                throw error
-            }
-        }) ()
-    }, [])
+      <div className="event-info">
+        <h3 className="event-title">{event.title}</h3>
+        <p className="event-date">{formatDate(event.event_date)}</p>
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const result = await dates.formatTime(event.time)
-                setTime(result)
-            }
-            catch (error) {
-                throw error
-            }
-        }) ()
-    }, [event])
+        {/* Only show the venue when we have a real one (the seed uses 'TBD'
+            as a placeholder, which is still fine to display). */}
+        {event.venue && <p className="event-venue">📍 {event.venue}</p>}
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const timeRemaining = await dates.formatRemainingTime(event.remaining)
-                setRemaining(timeRemaining)
-                dates.formatNegativeTimeRemaining(remaining, event.id)
-            }
-            catch (error) {
-                throw error
-            }
-        }) ()
-    }, [event])
+        {event.description && (
+          <p className="event-description">{event.description}</p>
+        )}
 
-    return (
-        <article className='event-information'>
-            <img src={event.image} />
-
-            <div className='event-information-overlay'>
-                <div className='text'>
-                    <h3>{event.title}</h3>
-                    <p><i className="fa-regular fa-calendar fa-bounce"></i> {event.date} <br /> {time}</p>
-                    <p id={`remaining-${event.id}`}>{remaining}</p>
-                </div>
-            </div>
-        </article>
-    )
+        {/* Only render the button when a ticket link exists. */}
+        {event.ticket_url && (
+          <a
+            className="event-ticket-link"
+            href={event.ticket_url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Get tickets
+          </a>
+        )}
+      </div>
+    </article>
+  )
 }
 
 export default Event
